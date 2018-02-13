@@ -246,13 +246,6 @@ class LaravelExcelReader
      */
     protected $dispatcher;
 
-	/**
-	 * The line containing the header title, by default
-	 *
-	 * @var int
-	 */
-	protected $headerRow;
-
     /**
      * Construct new reader
      *
@@ -378,15 +371,6 @@ class LaravelExcelReader
         $this->selectedSheets = $sheets;
     }
 
-	/**
-	 * Define a different header row than the global config
-	 * @param int $number
-	 */
-    public function setHeaderRow($number)
-    {
-    	$this->headerRow = $number;
-    }
-
     /**
      * Check if sheets were selected
      *
@@ -411,7 +395,7 @@ class LaravelExcelReader
             return true;
         }
 
-        return in_array($index, $selectedSheets);
+        return in_array($index, $selectedSheets) ? true : false;
     }
 
     /**
@@ -675,7 +659,7 @@ class LaravelExcelReader
      * @param callable      $callback
      * @param bool|string   $shouldQueue
      */
-    public function chunk($size = 10, callable $callback, $shouldQueue = true)
+    public function chunk($size = 10, callable $callback, $shouldQueue = true, $delimiter = null, $enclosure = null)
     {
         // Get total rows
         $totalRows = $this->getTotalRowsOfFile();
@@ -693,9 +677,11 @@ class LaravelExcelReader
                 $this->reader->getLoadSheetsOnly(),
                 $startRow,
                 $startIndex,
-                $chunkSize,
+                $chunkSize, 
                 $callback,
-                $shouldQueue
+                $shouldQueue,
+		$delimiter,
+                $enclosure,
             );
 
             if ($shouldQueue) {
@@ -1318,15 +1304,6 @@ class LaravelExcelReader
     public function getFileName()
     {
         return pathinfo($this->file, PATHINFO_FILENAME);
-    }
-
-	/**
-	 * Get the row containing the header
-	 * @return int
-	 */
-    public function getHeaderRow()
-    {
-    	return $this->headerRow ?: config('excel.import.startRow', 1);
     }
 
     /**
