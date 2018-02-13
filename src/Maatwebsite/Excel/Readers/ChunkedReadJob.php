@@ -62,9 +62,11 @@ class ChunkedReadJob implements ShouldQueue
         $sheets = null,
         $startRow,
         $startIndex,
-        $chunkSize,
+        $chunkSize,    
         callable $callback,
-        $shouldQueue = true
+        $shouldQueue = true,
+        $delimiter = null,
+        $enclosure = null
     ) {
         $this->startRow   = $startRow;
         $this->chunkSize  = $chunkSize;
@@ -74,6 +76,8 @@ class ChunkedReadJob implements ShouldQueue
         $this->callback    = $shouldQueue ? (new Serializer)->serialize($callback) : $callback;
         $this->sheets      = $sheets;
         $this->shouldQueue = $shouldQueue;
+        $this->delimiter   = $delimiter;
+        $this->enclosure   = $enclosure;
     }
 
     /***
@@ -82,6 +86,7 @@ class ChunkedReadJob implements ShouldQueue
     public function handle()
     {
         $reader = app('excel.reader');
+        $reader->setDelimiter($this->delimiter);
         $reader->injectExcel(app('phpexcel'));
         $reader->_init($this->file);
 
