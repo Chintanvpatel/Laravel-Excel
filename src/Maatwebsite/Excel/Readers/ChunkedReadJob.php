@@ -64,7 +64,9 @@ class ChunkedReadJob implements ShouldQueue
         $startIndex,
         $chunkSize,
         callable $callback,
-        $shouldQueue = true
+        $shouldQueue = true,
+        $delimiter,
+        $enclosure
     ) {
         $this->startRow   = $startRow;
         $this->chunkSize  = $chunkSize;
