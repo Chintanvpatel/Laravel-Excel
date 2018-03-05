@@ -65,7 +65,7 @@
             "type": "vcs",
             "url": "https://github.com/Chintanvpatel/PHPExcel"
         }
-    ]
+    ],
   "extra": {
         "laravel": {
             "providers": [
