@@ -675,10 +675,10 @@ class LaravelExcelReader
      * @param callable      $callback
      * @param bool|string   $shouldQueue
      */
-    public function chunk($size = 10, callable $callback, $shouldQueue = true, $delimiter = null, $enclosure = null)
+    public function chunk($totalRows, $size = 10, callable $callback, $shouldQueue = true, $delimiter = null, $enclosure = null)
     {
         // Get total rows
-        $totalRows = $this->getTotalRowsOfFile();
+        //$totalRows = $this->getTotalRowsOfFile();
 
         $break = false;
 
@@ -1281,7 +1281,7 @@ class LaravelExcelReader
     {
         $this->excel = new PHPExcel();
         $this->excel->cloneParent(clone $clone);
-        $this->excel->disconnectWorksheets();
+        //$this->excel->disconnectWorksheets();
     }
 
     /**
@@ -1468,7 +1468,7 @@ class LaravelExcelReader
      */
     public function _reset()
     {
-        $this->excel->disconnectWorksheets();
+        //$this->excel->disconnectWorksheets();
         $this->resetValueBinder();
         unset($this->parsed);
     }
