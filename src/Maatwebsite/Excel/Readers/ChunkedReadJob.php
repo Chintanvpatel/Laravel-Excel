@@ -86,8 +86,6 @@ class ChunkedReadJob implements ShouldQueue
     public function handle()
     {
         $reader = app('excel.reader');
-        $reader->setDelimiter($this->delimiter);
-        $reader->setEnclosure($this->enclosure);
         $reader->injectExcel(app('phpexcel'));
         $reader->_init($this->file);
 
@@ -101,10 +99,14 @@ class ChunkedReadJob implements ShouldQueue
 
         // Load file with chunk filter enabled
         $reader->excel = $reader->reader->load($this->file);
-
+        //dd($reader->excel);
         // Slice the results
-        $results = $reader->get()->slice($this->startIndex, $this->chunkSize);
-
+        //$results = $reader->get()->slice($this->startIndex, $this->chunkSize);
+        if($this->startRow == 0) {
+            $this->startRow = $this->startRow + 1;
+        }
+        
+        $results = $reader->excel->setOffset($this->startRow)->setLimit($this->chunkSize)->fetch();
         $callback = $this->shouldQueue ? (new Serializer)->unserialize($this->callback) : $this->callback;
 
         // Do a callback
